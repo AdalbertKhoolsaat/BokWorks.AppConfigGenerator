@@ -162,7 +162,6 @@ public class AppConfigGenerator : IIncrementalGenerator
             {
                 case Dictionary<string, object?> nested:
                     var className = name + "Config";
-                    // Property backed by a nested config class instance
                     sb.AppendLine($"{pad}public static {className} {name} {{ get; }} = new {className}();");
                     sb.AppendLine();
                     sb.AppendLine($"{pad}public partial class {className}");
@@ -198,7 +197,7 @@ public class AppConfigGenerator : IIncrementalGenerator
                     var className = name + "Config";
                     sb.AppendLine($"{pad}public {className} {name} {{ get; }} = new {className}();");
                     sb.AppendLine();
-                    sb.AppendLine($"{pad}public class {className}");
+                    sb.AppendLine($"{pad}public partial class {className}");
                     sb.AppendLine($"{pad}{{");
                     WriteNestedMembers(sb, nested, indent + 1);
                     sb.AppendLine($"{pad}}}");
@@ -243,4 +242,4 @@ public class AppConfigGenerator : IIncrementalGenerator
 
     private static string SanitizeIdentifier(string s) =>
         s.Replace('-', '_').Replace(' ', '_');
-}}
+}
