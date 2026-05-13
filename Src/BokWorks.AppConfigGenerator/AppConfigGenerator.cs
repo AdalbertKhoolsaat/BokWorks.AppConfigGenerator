@@ -161,9 +161,14 @@ public class AppConfigGenerator : IIncrementalGenerator
             switch (kvp.Value)
             {
                 case Dictionary<string, object?> nested:
-                    sb.AppendLine($"{pad}public static class {name}");
+                    var className = name + "Config";
+                    // Property backed by a nested config class instance
+                    sb.AppendLine($"{pad}public static {className} {name} {{ get; }} = new {className}();");
+                    sb.AppendLine();
+                    // Nested config class definition
+                    sb.AppendLine($"{pad}public class {className}");
                     sb.AppendLine($"{pad}{{");
-                    WriteMembers(sb, nested, indent + 1);
+                    WriteNestedMembers(sb, nested, indent + 1);
                     sb.AppendLine($"{pad}}}");
                     break;
                 case string s:
@@ -177,6 +182,39 @@ public class AppConfigGenerator : IIncrementalGenerator
                     break;
                 case double d:
                     sb.AppendLine($"{pad}public const double {name} = {d};");
+                    break;
+            }
+        }
+    }
+
+    private static void WriteNestedMembers(StringBuilder sb, Dictionary<string, object?> dict, int indent)
+    {
+        var pad = new string(' ', indent * 4);
+        foreach (var kvp in dict)
+        {
+            var name = ToPascalCase(kvp.Key);
+            switch (kvp.Value)
+            {
+                case Dictionary<string, object?> nested:
+                    var className = name + "Config";
+                    sb.AppendLine($"{pad}public {className} {name} {{ get; }} = new {className}();");
+                    sb.AppendLine();
+                    sb.AppendLine($"{pad}public class {className}");
+                    sb.AppendLine($"{pad}{{");
+                    WriteNestedMembers(sb, nested, indent + 1);
+                    sb.AppendLine($"{pad}}}");
+                    break;
+                case string s:
+                    sb.AppendLine($"{pad}public string {name} {{ get; }} = \"{Escape(s)}\";");
+                    break;
+                case bool b:
+                    sb.AppendLine($"{pad}public bool {name} {{ get; }} = {(b ? "true" : "false")};");
+                    break;
+                case long i:
+                    sb.AppendLine($"{pad}public long {name} {{ get; }} = {i}L;");
+                    break;
+                case double d:
+                    sb.AppendLine($"{pad}public double {name} {{ get; }} = {d};");
                     break;
             }
         }
