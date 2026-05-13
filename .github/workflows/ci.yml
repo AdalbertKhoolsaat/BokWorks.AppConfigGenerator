@@ -17,8 +17,8 @@ jobs:
             8.0.x
             10.0.x
       - name: Restore
-        run: dotnet restore Src/BokWorks.AppConfigGenerator.sln 
+        run: dotnet restore Src/BokWorks.AppConfigGenerator.slnx
       - name: Build
-        run: dotnet build Src/BokWorks.AppConfigGenerator.sln -v minimal
+        run: dotnet build Src/BokWorks.AppConfigGenerator.slnx -v minimal
       # - name: Test
       #   run: dotnet test BokWorks.AppConfigGenerator.sln -v minimal
