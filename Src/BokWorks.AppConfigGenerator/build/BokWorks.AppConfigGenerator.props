@@ -1,7 +1,8 @@
 <Project>
-    <ItemGroup>
+  <ItemGroup>
     <CompilerVisibleProperty Include="Configuration" />
     <AdditionalFiles Include="appsettings.json" Condition="Exists('$(MSBuildProjectDirectory)\appsettings.json')" />
     <AdditionalFiles Include="appsettings.Loc.json" Condition="Exists('$(MSBuildProjectDirectory)\appsettings.Loc.json')" />
+    <AdditionalFiles Include="appsettings.Local.json" Condition="Exists('$(MSBuildProjectDirectory)\appsettings.Local.json')" />
   </ItemGroup>
 </Project>

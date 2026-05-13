@@ -27,15 +27,15 @@ public class AppConfigGenerator : IIncrementalGenerator
             return string.Equals(config, "Release", StringComparison.OrdinalIgnoreCase);
         });
 
-        var assemblyName = context.CompilationProvider
-            .Select((c, _) => c.AssemblyName ?? "App");
+        var assemblyName = context.CompilationProvider.Select((c, _) => c.AssemblyName ?? "App");
 
         var settingsFiles = context.AdditionalTextsProvider
             .Where(f =>
             {
                 var name = Path.GetFileName(f.Path);
                 return name.Equals("appsettings.json", StringComparison.OrdinalIgnoreCase)
-                    || name.Equals("appsettings.Loc.json", StringComparison.OrdinalIgnoreCase);
+                    || name.Equals("appsettings.Loc.json", StringComparison.OrdinalIgnoreCase)
+                    || name.Equals("appsettings.Local.json", StringComparison.OrdinalIgnoreCase);
             });
 
         var combined = settingsFiles.Collect()
@@ -50,8 +50,12 @@ public class AppConfigGenerator : IIncrementalGenerator
             foreach (var f in files)
             {
                 var name = Path.GetFileName(f.Path);
-                if (name.Equals("appsettings.json", StringComparison.OrdinalIgnoreCase)) baseFile = f;
-                if (name.Equals("appsettings.Loc.json", StringComparison.OrdinalIgnoreCase)) locFile = f;
+                if (name.Equals("appsettings.json", StringComparison.OrdinalIgnoreCase))
+                    baseFile = f;
+                else if (name.Equals("appsettings.Loc.json", StringComparison.OrdinalIgnoreCase))
+                    locFile = f;
+                else if (name.Equals("appsettings.Local.json", StringComparison.OrdinalIgnoreCase))
+                    locFile ??= f; // only use .Local if .Loc wasn't found
             }
 
             if (baseFile == null) return;
@@ -179,7 +183,7 @@ public class AppConfigGenerator : IIncrementalGenerator
                     sb.AppendLine($"{pad}public const long {name} = {i}L;");
                     break;
                 case double d:
-                    sb.AppendLine($"{pad}public const double {name} = {d};");
+                    sb.AppendLine($"{pad}public const double {name} = {d.ToString("G", System.Globalization.CultureInfo.InvariantCulture)};");
                     break;
             }
         }
@@ -212,7 +216,7 @@ public class AppConfigGenerator : IIncrementalGenerator
                     sb.AppendLine($"{pad}public long {name} {{ get; }} = {i}L;");
                     break;
                 case double d:
-                    sb.AppendLine($"{pad}public double {name} {{ get; }} = {d};");
+                    sb.AppendLine($"{pad}public double {name} {{ get; }} = {d.ToString("G", System.Globalization.CultureInfo.InvariantCulture)};");
                     break;
             }
         }
