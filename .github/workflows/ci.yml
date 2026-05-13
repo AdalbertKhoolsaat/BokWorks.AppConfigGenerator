@@ -10,8 +10,8 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v6
+      - uses: actions/setup-dotnet@v5
         with:
           dotnet-version: |
             8.0.x
@@ -21,4 +21,4 @@ jobs:
       - name: Build
         run: dotnet build Src/BokWorks.AppConfigGenerator.slnx -v minimal
       - name: Test
-        run: dotnet test BokWorks.AppConfigGenerator.slnx -v minimal
+        run: dotnet test Src/BokWorks.AppConfigGenerator.slnx -v minimal
