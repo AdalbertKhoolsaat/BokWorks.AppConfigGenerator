@@ -32,9 +32,11 @@
 		<PackageReference Include="System.Text.Json" Version="10.0.8" PrivateAssets="all" />
 	</ItemGroup>
 
-	<!-- Pack the analyzer DLL into the correct location -->
+	<!-- Pack the analyzer DLL and props into the correct locations -->
 	<ItemGroup>
 		<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+		<None Include="build\BokWorks.AppConfigGenerator.props" Pack="true" PackagePath="build" Visible="false" />
+		<None Include="build\BokWorks.AppConfigGenerator.props" Pack="true" PackagePath="buildTransitive" Visible="false" />
 	</ItemGroup>
 
 </Project>
