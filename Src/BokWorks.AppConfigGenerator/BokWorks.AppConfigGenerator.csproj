@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<LangVersion>latest</LangVersion>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<IsPackable>true</IsPackable>
+		<IncludeBuildOutput>false</IncludeBuildOutput>
+		<AnalyzerLanguage>cs</AnalyzerLanguage>
+		<GenerateDocumentationFile>false</GenerateDocumentationFile>
+		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+		<NoWarn>$(NoWarn);RS2008</NoWarn>
+
+		<!-- NuGet packaging -->
+		<PackageId>BokWorks.AppConfigGenerator</PackageId>
+		<Title>Static config class generator for .NET MAUI</Title>
+		<Description>A Roslyn source generator that parses appsettings.json files and emits strongly-typed static config-classes with value-backed properties for .NET MAUI.</Description>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<RepositoryUrl>https://github.com/AdalbertKhoolsaat/BokWorks.AppConfigGenerator</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/AdalbertKhoolsaat/BokWorks.AppConfigGenerator</PackageProjectUrl>
+		<PackageTags>maui;configuration;appsettings.json;source-generator;roslyn</PackageTags>
+		<DevelopmentDependency>true</DevelopmentDependency>
+		<SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+		<IncludeSymbols>false</IncludeSymbols>
+		
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.3.0" PrivateAssets="all" />
+		<PackageReference Include="System.Text.Json" Version="10.0.8" PrivateAssets="all" />
+	</ItemGroup>
+
+	<!-- Pack the analyzer DLL into the correct location -->
+	<Target Name="GetPackAnalyzerFiles" Returns="@(AnalyzerFileTopack)">
+		<ItemGroup>
+			<AnalyzerFileTopack Include="$(OutputPath)$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+		</ItemGroup>
+	</Target>
+
+</Project>
