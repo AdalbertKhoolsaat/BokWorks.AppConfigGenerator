@@ -6,9 +6,6 @@ on:
       version:
         description: 'Version (e.g., 1.2.3)'
         required: true
-  push:
-    tags:
-      - 'v*.*.*'
 
 permissions:
   contents: read
@@ -28,8 +25,7 @@ jobs:
         run: dotnet restore Src/BokWorks.AppConfigGenerator/BokWorks.AppConfigGenerator.csproj
       - name: Pack
         run: |
-          VERSION=${{ inputs.version != '' && inputs.version || github.ref_name }}
-          VERSION=${VERSION#v}
+          VERSION=${{ inputs.version }}
           dotnet pack Src/BokWorks.AppConfigGenerator/BokWorks.AppConfigGenerator.csproj -c Release -p:Version=$VERSION -o artifacts
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
