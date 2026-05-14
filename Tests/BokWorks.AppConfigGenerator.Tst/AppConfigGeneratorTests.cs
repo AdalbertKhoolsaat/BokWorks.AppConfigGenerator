@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
-
-namespace BokWorks.AppConfigGenerator.Tst;
+﻿namespace BokWorks.AppConfigGenerator.Tst;
 
 public class AppConfigGeneratorTests
 {

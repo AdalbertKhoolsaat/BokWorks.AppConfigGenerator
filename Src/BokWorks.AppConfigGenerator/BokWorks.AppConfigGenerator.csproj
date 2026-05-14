@@ -17,7 +17,8 @@
 		<PackageId>BokWorks.AppConfigGenerator</PackageId>
 		<Title>Static config class generator for .NET MAUI</Title>
 		<Description>A Roslyn source generator that parses appsettings.json files and emits strongly-typed static config-classes with value-backed properties for .NET MAUI.</Description>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>		
+		<Authors>Adalbert Khoolsaat,BokWorks</Authors>
 		<RepositoryUrl>https://github.com/AdalbertKhoolsaat/BokWorks.AppConfigGenerator</RepositoryUrl>
 		<PackageProjectUrl>https://github.com/AdalbertKhoolsaat/BokWorks.AppConfigGenerator</PackageProjectUrl>
 		<PackageTags>maui;configuration;appsettings.json;source-generator;roslyn</PackageTags>
