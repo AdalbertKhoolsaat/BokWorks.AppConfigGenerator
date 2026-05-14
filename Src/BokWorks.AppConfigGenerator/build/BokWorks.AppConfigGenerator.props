@@ -4,5 +4,6 @@
     <AdditionalFiles Include="appsettings.json" Condition="Exists('$(MSBuildProjectDirectory)\appsettings.json')" />
     <AdditionalFiles Include="appsettings.Loc.json" Condition="Exists('$(MSBuildProjectDirectory)\appsettings.Loc.json')" />
     <AdditionalFiles Include="appsettings.Local.json" Condition="Exists('$(MSBuildProjectDirectory)\appsettings.Local.json')" />
+    <AdditionalFiles Include="appsettings.Development.json" Condition="Exists('$(MSBuildProjectDirectory)\appsettings.Development.json')" />
   </ItemGroup>
 </Project>

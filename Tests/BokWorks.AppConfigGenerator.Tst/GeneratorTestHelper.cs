@@ -2,6 +2,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Text;
+using System.Collections.Immutable;
 
 namespace BokWorks.AppConfigGenerator.Tst;
 
@@ -14,6 +15,7 @@ internal static class GeneratorTestHelper
         string? appSettingsJson,
         string? appSettingsLocJson = null,
         string? appSettingsLocalJson = null,
+        string? appSettingsDevelopmentJson = null,
         string assemblyName = "TestApp",
         string configuration = "Debug")
     {
@@ -37,6 +39,8 @@ internal static class GeneratorTestHelper
             additionalTexts.Add(new InMemoryAdditionalText("appsettings.Loc.json", appSettingsLocJson));
         if (appSettingsLocalJson is not null)
             additionalTexts.Add(new InMemoryAdditionalText("appsettings.Local.json", appSettingsLocalJson));
+        if (appSettingsDevelopmentJson is not null)
+            additionalTexts.Add(new InMemoryAdditionalText("appsettings.Development.json", appSettingsDevelopmentJson));
 
         var optionsProvider = new TestAnalyzerConfigOptionsProvider(configuration);
 
@@ -56,10 +60,11 @@ internal static class GeneratorTestHelper
         string appSettingsJson,
         string? appSettingsLocJson = null,
         string? appSettingsLocalJson = null,
+        string? appSettingsDevelopmentJson = null,
         string assemblyName = "TestApp",
         string configuration = "Debug")
     {
-        var result = RunGenerator(appSettingsJson, appSettingsLocJson, appSettingsLocalJson, assemblyName, configuration);
+        var result = RunGenerator(appSettingsJson, appSettingsLocJson, appSettingsLocalJson, appSettingsDevelopmentJson, assemblyName, configuration);
         Assert.Single(result.GeneratedSources);
         return result.GeneratedSources[0].SourceText.ToString();
     }

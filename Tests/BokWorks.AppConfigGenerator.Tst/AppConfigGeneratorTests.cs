@@ -145,6 +145,36 @@ public class AppConfigGeneratorTests
     }
 
     [Fact]
+    public void LocFile_MergesInDebugWithBaseFilePlaceholders()
+    {
+        var baseJson = """
+        {
+            "stage": null,
+            "services": {}            
+        }
+        """;
+
+        var locJson = """
+        {
+            "stage": "Dev",
+            "services": 
+            {            
+                "populated": true
+            }            
+        }
+        """;
+
+        var source = GeneratorTestHelper.GetGeneratedSource(baseJson, locJson, configuration: "Debug");
+        
+        // placeholders (empty value) in baseJson SHOULD be overridden by local file
+        Assert.Contains("""public const string Stage = "Dev";""", source);
+        // placeholders (empty object) in baseJson SHOULD be overridden by local file
+        Assert.Contains("public static ServicesConfig Services { get; } = new ServicesConfig();", source);
+        Assert.Contains("public partial class ServicesConfig", source);      
+        Assert.Contains("""public bool Populated { get; } = true;""", source);
+    }
+
+    [Fact]
     public void LocFile_IgnoredInRelease()
     {
         var baseJson = """{ "stage": "Prod" }""";
@@ -232,6 +262,44 @@ public class AppConfigGeneratorTests
         var source = result.GeneratedSources[0].SourceText.ToString();
 
         // .Loc wins over .Local
+        Assert.Contains("""public const string From = "loc";""", source);
+    }
+
+    [Fact]
+    public void DevelopmentFile_MergesInDebug()
+    {
+        var baseJson = """{ "stage": "Prod" }""";
+        var devJson = """{ "extra": "dev-only" }""";
+
+        var result = GeneratorTestHelper.RunGenerator(baseJson, appSettingsDevelopmentJson: devJson, configuration: "Debug");
+        var source = result.GeneratedSources[0].SourceText.ToString();
+
+        Assert.Contains("""public const string Stage = "Prod";""", source);
+        Assert.Contains("""public const string Extra = "dev-only";""", source);
+    }
+
+    [Fact]
+    public void DevelopmentFile_IgnoredInRelease()
+    {
+        var baseJson = """{ "stage": "Prod" }""";
+        var devJson = """{ "extra": "dev-only" }""";
+
+        var result = GeneratorTestHelper.RunGenerator(baseJson, appSettingsDevelopmentJson: devJson, configuration: "Release");
+        var source = result.GeneratedSources[0].SourceText.ToString();
+
+        Assert.DoesNotContain("Extra", source);
+    }
+
+    [Fact]
+    public void LocFile_TakesPrecedenceOverDevelopmentFile()
+    {
+        var baseJson = """{ "stage": "Prod" }""";
+        var locJson = """{ "from": "loc" }""";
+        var devJson = """{ "from": "dev" }""";
+
+        var result = GeneratorTestHelper.RunGenerator(baseJson, locJson, appSettingsDevelopmentJson: devJson, configuration: "Debug");
+        var source = result.GeneratedSources[0].SourceText.ToString();
+
         Assert.Contains("""public const string From = "loc";""", source);
     }
 }

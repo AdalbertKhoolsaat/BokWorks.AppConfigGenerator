@@ -35,7 +35,8 @@ public class AppConfigGenerator : IIncrementalGenerator
                 var name = Path.GetFileName(f.Path);
                 return name.Equals("appsettings.json", StringComparison.OrdinalIgnoreCase)
                     || name.Equals("appsettings.Loc.json", StringComparison.OrdinalIgnoreCase)
-                    || name.Equals("appsettings.Local.json", StringComparison.OrdinalIgnoreCase);
+                    || name.Equals("appsettings.Local.json", StringComparison.OrdinalIgnoreCase)
+                    || name.Equals("appsettings.Development.json", StringComparison.OrdinalIgnoreCase);
             });
 
         var combined = settingsFiles.Collect()
@@ -55,7 +56,9 @@ public class AppConfigGenerator : IIncrementalGenerator
                 else if (name.Equals("appsettings.Loc.json", StringComparison.OrdinalIgnoreCase))
                     locFile = f;
                 else if (name.Equals("appsettings.Local.json", StringComparison.OrdinalIgnoreCase))
-                    locFile ??= f; // only use .Local if .Loc wasn't found
+                    locFile ??= f;
+                else if (name.Equals("appsettings.Development.json", StringComparison.OrdinalIgnoreCase))
+                    locFile ??= f; // only if neither .Loc nor .Local was found
             }
 
             if (baseFile == null) return;
@@ -104,6 +107,12 @@ public class AppConfigGenerator : IIncrementalGenerator
         var result = new Dictionary<string, object?>(fallback);
         foreach (var kvp in dominant)
         {
+            if (kvp.Value is null)
+            {
+                // null in dominant is a placeholder — keep fallback value if present
+                continue;
+            }
+
             if (kvp.Value is Dictionary<string, object?> dominantNested
              && result.TryGetValue(kvp.Key, out var existing)
              && existing is Dictionary<string, object?> fallbackNested)
