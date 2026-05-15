@@ -1,4 +1,6 @@
 name: Release
+run-name: '${{ github.event.head_commit.message }} (Release Version ${{ inputs.version }})'
+
 on:
   workflow_dispatch:
     inputs:
