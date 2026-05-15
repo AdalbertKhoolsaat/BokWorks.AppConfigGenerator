@@ -1,5 +1,4 @@
 name: Release
-
 on:
   workflow_dispatch:
     inputs:
@@ -9,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  id-token: write
   packages: write
 
 jobs:
@@ -32,9 +32,12 @@ jobs:
         with:
           name: nuget
           path: artifacts/*.nupkg
-      - name: Push to GitHub Packages
+      - name: NuGet login (OIDC)
+        uses: nuget/login@v1
+        with:
+          user: AdalbertKhoolsaat
+      - name: Push to NuGet.org
         run: |
           dotnet nuget push artifacts/*.nupkg \
-            --api-key "${{ secrets.GITHUB_TOKEN }}" \
-            --source "https://nuget.pkg.github.com/AdalbertKhoolsaat/index.json" \
+            --source https://api.nuget.org/v3/index.json \
             --skip-duplicate
