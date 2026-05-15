@@ -1,5 +1,5 @@
 name: Release
-run-name: '${{ github.event.head_commit.message }} (Release Version ${{ inputs.version }})'
+run-name: 'Release Version ${{ inputs.version }}'
 
 on:
   workflow_dispatch:
@@ -36,6 +36,7 @@ jobs:
           path: artifacts/*.nupkg
       - name: NuGet login (OIDC)
         uses: nuget/login@v1
+        id: nuget-login
         with:
           user: AdalbertKhoolsaat
       - name: Push to NuGet.org
